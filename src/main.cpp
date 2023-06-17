@@ -18,6 +18,10 @@
 /*State*/
 typedef std::pair<size_t, size_t> Point;
 typedef std::pair<Point, Point> Move;
+typedef struct Movement {
+  Move move;
+  int score = 0;
+} Movement;
 class Board{
   public:
     char board[2][BOARD_H][BOARD_W] = {{

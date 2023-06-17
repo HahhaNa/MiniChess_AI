@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <set>
 #include <utility>
 
 #include "../config.hpp"
@@ -11,6 +12,10 @@
 
 typedef std::pair<size_t, size_t> Point;
 typedef std::pair<Point, Point> Move;
+typedef struct Movement {
+  Move move;
+  int score = 0;
+} Movement;
 class Board{
   public:
     char board[2][BOARD_H][BOARD_W] = {{
@@ -47,13 +52,21 @@ class State{
     Board board;
     int player = 0;
     std::vector<Move> legal_actions;
-    
+
+    // 將avl_actions 由score從小排到大
+    struct cmp {
+        bool operator ()(const Movement &a, const Movement &b) {
+            return  (a.score < b.score);
+        }
+    };
+    std::set<Movement, cmp> avl_actions;  
+      
     State(){};
     State(int player): player(player){};
     State(Board board): board(board){};
     State(Board board, int player): board(board), player(player){};
     
-    int evaluate();
+    int evaluate(Board b);
     State* next_state(Move move);
     void get_legal_actions();
     std::string encode_output();
