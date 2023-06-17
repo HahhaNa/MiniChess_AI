@@ -11,9 +11,22 @@
  * 
  * @return int 
  */
+static const int material_table[7] = {0, 2, 6, 7, 8, 20, 100};
+// 1: pawn(兵), 2: rook(城堡，直橫), 
+// 3: knight(馬，可越過其他旗子), 4: bishop(主教，斜), 
+// 5: queen(橫、直、斜，格數不限，但不可越過其他棋子)
+// 6: king(橫、直、斜，每次只走一格)
 int State::evaluate(){
-  // [TODO] design your own evaluation function
-  return 0;
+  // [TODO] design your DDown evaluation function
+  int cnt = 0;
+  Board myBoard = this->board;
+  for(int i=0; i<BOARD_H; i++) {
+    for(int j=0; j<BOARD_W; j++) {
+      int t = myBoard.board[player][i][j] -'0';
+      cnt += material_table[t];
+    }
+  }
+  return cnt;
 }
 
 
