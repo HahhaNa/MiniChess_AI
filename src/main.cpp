@@ -4,6 +4,7 @@
 #include <sstream>
 #include <array>
 #include <vector>
+#include <set>
 #include <cassert>
 #include <cstdint>
 
@@ -57,6 +58,14 @@ class State{
     Board board;
     int player = 0;
     std::vector<Move> legal_actions;
+
+    // 將avl_actions 由score從小排到大
+    struct cmp {
+        bool operator ()(const Movement &a, const Movement &b) {
+            return  (a.score < b.score);
+        }
+    };
+    std::set<Movement, cmp> avl_actions;  
     
     State(){};
     State(int player): player(player){};

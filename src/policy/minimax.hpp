@@ -8,5 +8,5 @@
  */
 class Minimax{
 public:
-  static Move get_move(State *state, int depth);
+  Move get_minimax_move(State *state, int depth);
 };

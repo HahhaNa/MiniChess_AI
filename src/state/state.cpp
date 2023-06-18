@@ -14,11 +14,12 @@
 static const int material_table[7] = {0, 2, 6, 7, 8, 20, 100};
 // 1: pawn(兵), 2: rook(城堡，直橫), 
 // 3: knight(馬，可越過其他旗子), 4: bishop(主教，斜), 
-// 5: queen(橫、直、斜，格數不限，但不可越過其他棋子)
+// 5: queen(橫、直、斜，格數不限，但不可  crgsl;越過其他棋子)
 // 6: king(橫、直、斜，每次只走一格)
-int State::evaluate(Board myBoard){
+int State::evaluate(State state){
   // [TODO] design your DDown evaluation function
   int score = 0;
+  Board myBoard = state.board;
   for(int i=0; i<BOARD_H; i++) {
     for(int j=0; j<BOARD_W; j++) {
       int t = myBoard.board[player][i][j] -'0';
@@ -50,10 +51,10 @@ State* State::next_state(Move move){
   
   next.board[this->player][from.first][from.second] = 0;
   next.board[this->player][to.first][to.second] = moved;
-
-  avl_actions.emplace(move, evaluate(next));
   
   State* next_state = new State(next, 1-this->player);
+  avl_actions.emplace(move, evaluate(*next_state));
+  
   
   if(this->game_state != WIN)
     next_state->get_legal_actions();
@@ -96,6 +97,7 @@ void State::get_legal_actions(){
   std::vector<int> actions_points;
   auto self_board = this->board.board[this->player];
   auto oppn_board = this->board.board[1 - this->player];
+
   
   int now_piece, oppn_piece;
   for(int i=0; i<BOARD_H; i+=1){

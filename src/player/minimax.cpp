@@ -34,15 +34,15 @@ void read_board(std::ifstream& fin) {
 
 
 /**
- * @brief Minimaxly choose a move and then write it into output file
+ * @brief randomly choose a move and then write it into output file
  * 
  * @param fout 
  */
 void write_valid_spot(std::ofstream& fout) {
   // Keep updating the output until getting killed.
   while(true) {
-    // Choose a Minimax spot.
-    auto move = Minimax::get_move(root, 0);
+    // Choose a random spot.
+    auto move = Minimax::get_minimax_move(root, 3);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     

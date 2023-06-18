@@ -60,13 +60,14 @@ class State{
         }
     };
     std::set<Movement, cmp> avl_actions;  
+    Movement movement_now;
       
     State(){};
     State(int player): player(player){};
     State(Board board): board(board){};
     State(Board board, int player): board(board), player(player){};
     
-    int evaluate(Board b);
+    int evaluate(State state);
     State* next_state(Move move);
     void get_legal_actions();
     std::string encode_output();
