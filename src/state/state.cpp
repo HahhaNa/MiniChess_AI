@@ -16,16 +16,17 @@ static const int material_table[7] = {0, 2, 6, 7, 8, 20, 100};
 // 3: knight(馬，可越過其他旗子), 4: bishop(主教，斜), 
 // 5: queen(橫、直、斜，格數不限，但不可  crgsl;越過其他棋子)
 // 6: king(橫、直、斜，每次只走一格)
-int State::evaluate(State state){
+int State::evaluate(){
   // [TODO] design your DDown evaluation function
   int score = 0;
-  Board myBoard = state.board;
+  Board myBoard = this->board;
   for(int i=0; i<BOARD_H; i++) {
     for(int j=0; j<BOARD_W; j++) {
       int t = myBoard.board[player][i][j] -'0';
       score += material_table[t];
     }
   }
+  std::cout << "Score: " << score << std::endl;
   return score;
 }
 
@@ -53,7 +54,7 @@ State* State::next_state(Move move){
   next.board[this->player][to.first][to.second] = moved;
   
   State* next_state = new State(next, 1-this->player);
-  avl_actions.emplace(move, evaluate(*next_state));
+  // avl_actions.emplace(move, evaluate(*next_state));
   
   
   if(this->game_state != WIN)
@@ -226,6 +227,9 @@ void State::get_legal_actions(){
   }
   std::cout << "\n";
   this->legal_actions = all_actions;
+  /*for(auto it: legal_actions) {
+    avl_actions.emplace(it, State::evaluate(*this));
+  }*/
 }
 
 

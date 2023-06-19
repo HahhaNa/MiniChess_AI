@@ -3,10 +3,10 @@
 
 
 /**
- * @brief Policy class for random policy, 
+ * @brief Policy class for minimax policy, 
  * your policy class should have get_move method
  */
 class Minimax{
 public:
-  Move get_minimax_move(State *state, int depth);
+  Movement get_minimax(State *state, int depth);
 };

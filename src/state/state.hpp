@@ -15,6 +15,8 @@ typedef std::pair<Point, Point> Move;
 typedef struct Movement {
   Move move;
   int score = 0;
+  Movement() :move(move), score(0);
+  Movement(Move move, int score): move(move), score(score){};
 } Movement;
 class Board{
   public:
@@ -55,19 +57,18 @@ class State{
 
     // 將avl_actions 由score從小排到大
     struct cmp {
-        bool operator ()(const Movement &a, const Movement &b) {
+        bool operator ()(const Movement &a, const Movement &b) const{
             return  (a.score < b.score);
         }
     };
     std::set<Movement, cmp> avl_actions;  
-    Movement movement_now;
       
     State(){};
     State(int player): player(player){};
     State(Board board): board(board){};
     State(Board board, int player): board(board), player(player){};
     
-    int evaluate(State state);
+    int evaluate();
     State* next_state(Move move);
     void get_legal_actions();
     std::string encode_output();

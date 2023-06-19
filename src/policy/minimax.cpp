@@ -1,22 +1,16 @@
 #include <cstdlib>
-
+#include <fstream>
 #include "../state/state.hpp"
 #include "./minimax.hpp"
 
-/* From ppt: 
-function  minimax(node, depth, maximizingPlayer) is
-    if depth = 0 or node is a terminal node then
-        return the heuristic value of node
-    if maximizingPlayer then
-        value := −∞
-        for each child of node do
-            value := max(value, minimax(child, depth − 1, FALSE))
-        return value
-    else (* minimizing player *)
-        value := +∞
-        for each child of node do
-            value := min(value, minimax(child, depth − 1, TRUE))
-        return value
+/* 
+// Returns the optimal value a maximizer can obtain.
+// depth is current depth in game tree.
+// nodeIndex is index of current node in scores[].
+// isPlayer is true if current move is
+// of maximizer, else false
+// scores[] stores leaves of Game tree.
+// h is maximum height of Game tree
 */
 
 
@@ -27,27 +21,24 @@ function  minimax(node, depth, maximizingPlayer) is
  * @param depth ?
  * @return Move 
  */
-State* root = NULL;
-int self = -1;
-Move Minimax::get_minimax_move(State *state, int depth){
-  static Move move;
-  
-  if(!root) {
-    root = state;
-    self = state->player;
-  }
-  if(depth==0 || state->avl_actions.empty()) {
-    return move;
-  }
-  if(!(state->player == self)) {
-    static int value = 1e8;
-    Movement tmp = *(state->avl_actions.begin());
-    move = tmp.score < value? tmp.move : move;
-    return move;
-  } else if(state->player == self) {
-    static int value = -1e8;
-    Movement tmp = *(state->avl_actions.end());
-    move = tmp.score > value? tmp.move : move;
-    return move;
-  } 
+Move minimax(int depth, int nodeIndex, bool isPlayer,
+            std::vector<Move> legal_actions, int h)
+{
+    // Terminating condition. i.e
+    // leaf node is reached
+    if (depth == h)
+        return legal_actions.at(nodeIndex);
+ 
+    //  If current move is maximizer,
+    // find the maximum attainable
+    // value
+    if (isPlayer)
+       return max(minimax(depth+1, nodeIndex*2, false, legal_actions, h),
+            minimax(depth+1, nodeIndex*2 + 1, false, legal_actions, h));
+ 
+    // Else (If current move is Minimizer), find the minimum
+    // attainable value
+    else
+        return min(minimax(depth+1, nodeIndex*2, true, legal_actions, h),
+            minimax(depth+1, nodeIndex*2 + 1, true, legal_actions, h));
 }
