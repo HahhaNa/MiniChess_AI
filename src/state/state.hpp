@@ -55,13 +55,14 @@ class State{
     int player = 0;
     std::vector<Move> legal_actions;
 
-    // 將avl_actions 由score從小排到大
+    /*// 將avl_actions 由score從小排到大
     struct cmp {
         bool operator ()(const Movement &a, const Movement &b) const{
             return  (a.score < b.score);
         }
     };
-    std::set<Movement, cmp> avl_actions;  
+    std::set<Movement, cmp> avl_actions;*/
+    Move* pre_move;
       
     State(){};
     State(int player): player(player){};
