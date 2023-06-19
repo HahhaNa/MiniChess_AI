@@ -18,7 +18,7 @@ int State::evaluate(){
   Board myBoard = this->board;
   for(int i=0; i<BOARD_H; i++) {
     for(int j=0; j<BOARD_W; j++) {
-      int t = myBoard.board[player][i][j] -'0';
+      int t = (myBoard.board[player][i][j] -'0')-(myBoard.board[1-player][i][j] -'0');
       score += material_table[t];
     }
   }

@@ -43,7 +43,7 @@ void write_valid_spot(std::ofstream& fout) {
   while(true) {
     // Choose a minimax spot.
     Minimax minimax;
-    Movement movement = minimax.get_minimax(root, 2, true);
+    Movement movement = minimax.get_minimax(root, 3, true);
     fout << movement.move.first.first << " " << movement.move.first.second << " "\
          << movement.move.second.first << " " << movement.move.second.second << std::endl;
     
