@@ -38,14 +38,14 @@ void read_board(std::ifstream& fin) {
  * 
  * @param fout 
  */
-void write_valid_spot(std::ofstream& fout) {
+void write_valid_spot(std::ofstream& fout) { 
   // Keep updating the output until getting killed.
   while(true) {
     // Choose a minimax spot.
     Minimax minimax;
-    Move move = minimax.get_move(root, 3);
-    fout << move.first.first << " " << move.first.second << " "\
-         << move.second.first << " " << move.second.second << std::endl;
+    Movement movement = minimax.get_minimax(root, 2, true);
+    fout << movement.move.first.first << " " << movement.move.first.second << " "\
+         << movement.move.second.first << " " << movement.move.second.second << std::endl;
     
     // Remember to flush the output to ensure the last action is written to file.
     fout.flush();

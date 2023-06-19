@@ -15,7 +15,7 @@ typedef std::pair<Point, Point> Move;
 typedef struct Movement {
   Move move;
   int score = 0;
-  Movement() :move(move), score(0);
+  Movement() :score(0) {};
   Movement(Move move, int score): move(move), score(score){};
 } Movement;
 class Board{

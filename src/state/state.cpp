@@ -12,10 +12,6 @@
  * @return int 
  */
 static const int material_table[7] = {0, 2, 6, 7, 8, 20, 100};
-// 1: pawn(兵), 2: rook(城堡，直橫), 
-// 3: knight(馬，可越過其他旗子), 4: bishop(主教，斜), 
-// 5: queen(橫、直、斜，格數不限，但不可  crgsl;越過其他棋子)
-// 6: king(橫、直、斜，每次只走一格)
 int State::evaluate(){
   // [TODO] design your DDown evaluation function
   int score = 0;
@@ -26,7 +22,7 @@ int State::evaluate(){
       score += material_table[t];
     }
   }
-  std::cout << "Score: " << score << std::endl;
+  // std::cout << "Score: " << score << std::endl;
   return score;
 }
 

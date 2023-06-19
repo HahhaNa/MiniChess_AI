@@ -8,5 +8,5 @@
  */
 class Minimax{
 public:
-  Movement get_minimax(State *state, int depth);
+  Movement get_minimax(State *state, int depth, bool isPlayer);
 };
