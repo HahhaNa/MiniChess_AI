@@ -4,7 +4,6 @@
 #include <sstream>
 #include <array>
 #include <vector>
-#include <set>
 #include <cassert>
 #include <cstdint>
 
@@ -54,14 +53,12 @@ class State{
     Board board;
     int player = 0;
     std::vector<Move> legal_actions;
- 
     
     State(){};
     State(int player): player(player){};
     State(Board board): board(board){};
     State(Board board, int player): board(board), player(player){};
     
-    int evaluate(State state);
     State* next_state(Move move);
     void get_legal_actions();
     std::string encode_output();
@@ -79,7 +76,7 @@ State* State::next_state(Move move){
   Point from = move.first, to = move.second;
   
   int8_t moved = next.board[this->player][from.first][from.second];
-  //promotion for pawn 
+  //promotion for pawn
   if(moved == 1 && (to.first==BOARD_H-1 || to.first==0)){
     moved = 5;
   }
@@ -91,8 +88,7 @@ State* State::next_state(Move move){
   next.board[this->player][to.first][to.second] = moved;
   
   State* next_state = new State(next, 1-this->player);
-  // avl_actions.emplace(move, next_state->evaluate(*next_state));
-
+  
   if(this->game_state != WIN)
     next_state->get_legal_actions();
   return next_state;
