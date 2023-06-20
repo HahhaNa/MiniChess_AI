@@ -24,7 +24,7 @@ enum  Chessman{
 
 Chessman translate(char c) {
   Chessman rtn;
-  switch(c-'0') {
+  switch(c) {
     case 0: rtn = SPACE; break;
     case 1: rtn = PAWN; break;
     case 2: rtn = ROOK; break;
@@ -47,8 +47,11 @@ int State::evaluate(){
     for(int j=0; j<BOARD_W; j++) {
       Chessman ply = translate(myBoard.board[player][i][j]);
       Chessman opp = translate(myBoard.board[1-player][i][j]);
-      score = material_table[ply]-material_table[opp];
-
+      // log << "YY: " << ply << " " << opp << std::endl;
+      
+      
+      // TODO: Check below evaluate
+      /*
       // PAWN
       int dx[] = {0,0,-1,1};  int dy[] = {-1,1,0,0};
       for(int d=0; d<4; d++) {
@@ -115,6 +118,7 @@ int State::evaluate(){
           else score = -1;
         }
       }
+      */
       log << "Tmp score: " << score << std::endl;
     }
   }
