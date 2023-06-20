@@ -40,19 +40,19 @@ void read_board(std::ifstream& fin) {
  */
 void write_valid_spot(std::ofstream& fout) { 
   // Keep updating the output until getting killed.
-  while(true) {
-    // Choose a minimax spot.
+  
     Minimax minimax;
-    int depth = 0;
-    int bestscore = minimax.get_minimax(root, 4, true);
-    Move move = root->prev_move;
-    fout << move.first.first << " " << move.first.second << " "\
+    int depth;
+    depth = 1;
+    while (true){
+        Move move = minimax.get_move(root, depth, root->player);
+        fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
-    
-    // Remember to flush the output to ensure the last action is written to file.
-    fout.flush();
-    break;
-  }
+        depth += 1;
+        fout.flush();
+        if(depth >=4) break;
+    }
+    // Remember to flush the output to ensure the last action is written to file.  
 }
 
 
