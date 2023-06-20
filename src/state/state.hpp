@@ -62,7 +62,7 @@ class State{
         }
     };
     std::set<Movement, cmp> avl_actions;*/
-    Move pmove, nmove;
+    Move pmove;
     bool legal_initialize = false;
       
     State(){};
