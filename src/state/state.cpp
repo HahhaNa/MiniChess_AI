@@ -12,120 +12,18 @@
  * 
  * @return int 
  */
-static const int material_table[7] = {0, 2, 6, 7, 8, 20, 100};
-enum  Chessman{
-  SPACE, PAWN, ROOK, KNIGHT, BISHOP,
-  QUEEN, KING, UNDEFINED
-};
-// 1: pawn(兵), 2: rook(城堡，直橫), 
-// 3: knight(馬，可越過其他旗子), 4: bishop(主教，斜), 
-// 5: queen(橫、直、斜，格數不限，但不可越過其他棋子)
-// 6: king(橫、直、斜，每次只走一格)
-
-Chessman translate(char c) {
-  Chessman rtn;
-  switch(c) {
-    case 0: rtn = SPACE; break;
-    case 1: rtn = PAWN; break;
-    case 2: rtn = ROOK; break;
-    case 3: rtn = KNIGHT; break;
-    case 4: rtn = BISHOP; break;
-    case 5: rtn = QUEEN; break;
-    case 6: rtn = KING; break;
-    default: rtn = UNDEFINED; break;
-  }
-  return rtn;
-}
-
+static const int material_table[7] = {1, 3, 8, 9, 10, 30, 100};
 int State::evaluate(int root_player){
   // [TODO] design your DDown evaluation function
-  std::ofstream log("gamelog.txt");
-  log << "IN EVALUATE\n";
   int score = 0;
   for (int i = 0; i < BOARD_H; i += 1) {
       for (int j = 0; j < BOARD_W; j += 1) {
-          int cur = this->board.board[0][i][j];
-          Chessman ply = translate(this->board.board[1 - root_player][i][j]);
-          if (cur) {
-              score += material_table[cur];
-          }
-          cur = this->board.board[root_player][i][j];
-          if (cur) {
-              score -= material_table[cur];
-          }
-        /*  log << "Easy Score:" << score << "\n";
-
-        int dx[] = {0,0,-1,1};  int dy[] = {-1,1,0,0};
-        for(int d=0; d<4; d++) {
-          int px=i+dx[d]; int py=j+dy[d];
-          if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
-          Chessman opp = translate(this->board.board[1-player][px][py]);
-          if(opp==PAWN || opp==KING) {
-            if(ply == KING) score = 0;
-            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-            else score = -1;
-          }
-        }
-        // ROOK QUEEN;
-        int rx=i; int ry=j;
-        for(int d=0; d<4; d++) {
-          rx=i+dx[d]; ry=j+dy[d];
-          while(rx<0 || rx>=BOARD_W || ry<0 || ry>=BOARD_H) {
-            Chessman opp = translate(this->board.board[1-player][rx][ry]);
-            if(opp==SPACE) continue;
-            else if(opp==ROOK || opp==QUEEN) {
-              if(ply == KING) score = 0;
-              else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-              else score = -1;
-            }
-            else break;
-          }
-        } 
-        // KING
-        int ex[4] = {-1,-1,1,1};  
-        int ey[4] = {-1,1,-1,1};
-        for(int d=0; d<4; d++) {
-          int px=i+ex[d]; int py=j+ey[d];
-          if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
-          Chessman opp = translate(this->board.board[1-player][px][py]);
-          if(opp==KING) {
-            if(ply == KING) score = 0;
-            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-            else score = -1;
-          }
-        }
-        // BISHOP QUEEN;
-        rx=i; ry=j;
-        for(int d=0; d<4; d++){
-          while(rx+ex[d]<0 || rx+ex[d]>=BOARD_W || ry+ey[d]<0 || ry+ey[d]>=BOARD_H) {
-            Chessman opp = translate(this->board.board[1-player][i+ex[d]][j+ey[d]]);
-            if(opp==SPACE) continue;
-            else if(opp==BISHOP || opp==QUEEN) {
-              if(ply == KING) score = 0;
-              else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-              else score = -1;
-            }
-            else break;
-          }
-        }
-        //KNIGHT
-        int kx[] = {1,1,-1,-1,2,2,-2,-2}; int ky[] = {2,-2,2,-2,1,-1,1,-1};
-        for(int d=0; d<8; d++) {
-          int px=i+kx[d]; int py=j+ky[d];
-          if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
-          Chessman opp = translate(this->board.board[1-player][px][py]);
-          if(opp==KNIGHT) {
-            if(ply == KING) score = 0;
-            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-            else score = -1;
-          }
-        }
-        
-       //  log << "Tmp score: " << score << std::endl;*/
+          int cur = this->board.board[root_player][i][j];
+          score += material_table[cur];
+          cur = this->board.board[1-root_player][i][j];
+          score -= material_table[cur];
       }
     }
-    log << "Return Score: " << score << std::endl;
-    log.close();
     return score;
 }
 

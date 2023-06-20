@@ -17,7 +17,7 @@ int main(){
     if(temp != NULL){
       std::cout << temp->encode_output();
     }else{
-      std::cout << "NULL\n";
+      std::cout << "NULL \n";
     }
   }
   return 0;

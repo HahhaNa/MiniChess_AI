@@ -40,7 +40,6 @@ void read_board(std::ifstream& fin) {
  */
 void write_valid_spot(std::ofstream& fout) { 
   // Keep updating the output until getting killed.
-  
     Minimax minimax;
     int depth;
     depth = 1;

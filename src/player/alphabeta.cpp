@@ -40,7 +40,6 @@ void read_board(std::ifstream& fin) {
  */
 void write_valid_spot(std::ofstream& fout) { 
   // Keep updating the output until getting killed.
-  
     AlphaBeta alphaBeta;
     int depth;
     depth = 1;
@@ -49,10 +48,8 @@ void write_valid_spot(std::ofstream& fout) {
         fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
         depth += 1;
-        if(depth > 6) break;
         fout.flush();
-    }
-    // Remember to flush the output to ensure the last action is written to file.  
+    }  
 }
 
 

@@ -57,10 +57,10 @@ int AlphaBeta::minmax(State* state, int depth, int alpha, int beta, int root_pla
         state->pmove = next_state->pmove;
         initialize = true;
       }
-      if((Eva<minEva || minEva<beta) && depth==6) state->pmove = next_state->pmove;
+      if((Eva<minEva || minEva<beta) && depth==6) 
+        state->pmove = next_state->pmove;
       if(beta <= alpha) break;
     }
     return minEva;
   }
-  
 }
