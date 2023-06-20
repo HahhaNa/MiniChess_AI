@@ -37,104 +37,97 @@ Chessman translate(char c) {
   return rtn;
 }
 
-int State::evaluate(){
+int State::evaluate(int root_player){
   // [TODO] design your DDown evaluation function
   std::ofstream log("gamelog.txt");
   log << "IN EVALUATE\n";
   int score = 0;
   for (int i = 0; i < BOARD_H; i += 1) {
       for (int j = 0; j < BOARD_W; j += 1) {
-          int cur = this->board.board[1 - this->player][i][j];
+          int cur = this->board.board[0][i][j];
+          Chessman ply = translate(this->board.board[1 - root_player][i][j]);
           if (cur) {
               score += material_table[cur];
           }
-          cur = this->board.board[this->player][i][j];
+          cur = this->board.board[root_player][i][j];
           if (cur) {
               score -= material_table[cur];
           }
-      }
-  }
-  log << "Return Score: " << score << std::endl;
-  log.close();
-  return score;
-      
-      // TODO: Check below evaluate
-      /*
-      // PAWN
-      int dx[] = {0,0,-1,1};  int dy[] = {-1,1,0,0};
-      for(int d=0; d<4; d++) {
-        int px=i+dx[d]; int py=j+dy[d];
-        if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
-        Chessman opp = translate(myBoard.board[1-player][px][py]);
-        if(opp==PAWN || opp==KING) {
-          if(ply == KING) score = 0;
-          else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-          else score = -1;
-        }
-      }
-      // ROOK QUEEN;
-      int rx=i; int ry=j;
-      for(int d=0; d<4; d++) {
-        rx=i+dx[d]; ry=j+dy[d];
-        while(rx<0 || rx>=BOARD_W || ry<0 || ry>=BOARD_H) {
-          Chessman opp = translate(myBoard.board[1-player][rx][ry]);
-          if(opp==SPACE) continue;
-          else if(opp==ROOK || opp==QUEEN) {
-            if(ply == KING) score = 0;
-            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-            else score = -1;
-          }
-          else break;
-        }
-      } 
-      // KING
-      int ex[4] = {-1,-1,1,1};  
-      int ey[4] = {-1,1,-1,1};
-      for(int d=0; d<4; d++) {
-        int px=i+ex[d]; int py=j+ey[d];
-        if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
-        Chessman opp = translate(myBoard.board[1-player][px][py]);
-        if(opp==KING) {
-          if(ply == KING) score = 0;
-          else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-          else score = -1;
-        }
-      }
-      // BISHOP QUEEN;
-      rx=i; ry=j;
-      for(int d=0; d<4; d++){
-        while(rx+ex[d]<0 || rx+ex[d]>=BOARD_W || ry+ey[d]<0 || ry+ey[d]>=BOARD_H) {
-          Chessman opp = translate(myBoard.board[1-player][i+ex[d]][j+ey[d]]);
-          if(opp==SPACE) continue;
-          else if(opp==BISHOP || opp==QUEEN) {
-            if(ply == KING) score = 0;
-            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-            else score = -1;
-          }
-          else break;
-        }
-      }
-      //KNIGHT
-      int kx[] = {1,1,-1,-1,2,2,-2,-2}; int ky[] = {2,-2,2,-2,1,-1,1,-1};
-      for(int d=0; d<8; d++) {
-        int px=i+kx[d]; int py=j+ky[d];
-        if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
-        Chessman opp = translate(myBoard.board[1-player][px][py]);
-        if(opp==KNIGHT) {
-          if(ply == KING) score = 0;
-          else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
-          else score = -1;
-        }
-      }
-      
-      log << "Tmp score: " << score << std::endl;
-    }
-  }
-  log << "Return Score: " << score << std::endl;
-  log.close();
-  return score;*/
-}
+        /*  log << "Easy Score:" << score << "\n";
 
+        int dx[] = {0,0,-1,1};  int dy[] = {-1,1,0,0};
+        for(int d=0; d<4; d++) {
+          int px=i+dx[d]; int py=j+dy[d];
+          if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
+          Chessman opp = translate(this->board.board[1-player][px][py]);
+          if(opp==PAWN || opp==KING) {
+            if(ply == KING) score = 0;
+            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
+            else score = -1;
+          }
+        }
+        // ROOK QUEEN;
+        int rx=i; int ry=j;
+        for(int d=0; d<4; d++) {
+          rx=i+dx[d]; ry=j+dy[d];
+          while(rx<0 || rx>=BOARD_W || ry<0 || ry>=BOARD_H) {
+            Chessman opp = translate(this->board.board[1-player][rx][ry]);
+            if(opp==SPACE) continue;
+            else if(opp==ROOK || opp==QUEEN) {
+              if(ply == KING) score = 0;
+              else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
+              else score = -1;
+            }
+            else break;
+          }
+        } 
+        // KING
+        int ex[4] = {-1,-1,1,1};  
+        int ey[4] = {-1,1,-1,1};
+        for(int d=0; d<4; d++) {
+          int px=i+ex[d]; int py=j+ey[d];
+          if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
+          Chessman opp = translate(this->board.board[1-player][px][py]);
+          if(opp==KING) {
+            if(ply == KING) score = 0;
+            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
+            else score = -1;
+          }
+        }
+        // BISHOP QUEEN;
+        rx=i; ry=j;
+        for(int d=0; d<4; d++){
+          while(rx+ex[d]<0 || rx+ex[d]>=BOARD_W || ry+ey[d]<0 || ry+ey[d]>=BOARD_H) {
+            Chessman opp = translate(this->board.board[1-player][i+ex[d]][j+ey[d]]);
+            if(opp==SPACE) continue;
+            else if(opp==BISHOP || opp==QUEEN) {
+              if(ply == KING) score = 0;
+              else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
+              else score = -1;
+            }
+            else break;
+          }
+        }
+        //KNIGHT
+        int kx[] = {1,1,-1,-1,2,2,-2,-2}; int ky[] = {2,-2,2,-2,1,-1,1,-1};
+        for(int d=0; d<8; d++) {
+          int px=i+kx[d]; int py=j+ky[d];
+          if(px<0 || px>=BOARD_W || py<0 || py>=BOARD_H) continue;
+          Chessman opp = translate(this->board.board[1-player][px][py]);
+          if(opp==KNIGHT) {
+            if(ply == KING) score = 0;
+            else if(ply != UNDEFINED) score -= (material_table[ply]*2/3);
+            else score = -1;
+          }
+        }
+        
+       //  log << "Tmp score: " << score << std::endl;*/
+      }
+    }
+    log << "Return Score: " << score << std::endl;
+    log.close();
+    return score;
+}
 
 /**
  * @brief return next state after the move

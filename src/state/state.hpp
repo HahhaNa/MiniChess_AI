@@ -62,7 +62,7 @@ class State{
         }
     };
     std::set<Movement, cmp> avl_actions;*/
-    Move prev_move;
+    Move pmove, nmove;
     bool legal_initialize = false;
       
     State(){};
@@ -70,7 +70,7 @@ class State{
     State(Board board): board(board){};
     State(Board board, int player): board(board), player(player){};
     
-    int evaluate();
+    int evaluate(int root_player);
     State* next_state(Move move);
     void get_legal_actions();
     std::string encode_output();
