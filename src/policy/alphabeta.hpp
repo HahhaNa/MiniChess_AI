@@ -2,6 +2,7 @@
 #include "../state/state.hpp"
 
 
+
 /**
  * @brief Policy class for alphabeta policy, 
  * your policy class should have get_move method
