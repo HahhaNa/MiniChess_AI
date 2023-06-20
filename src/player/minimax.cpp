@@ -50,7 +50,6 @@ void write_valid_spot(std::ofstream& fout) {
          << move.second.first << " " << move.second.second << std::endl;
         depth += 1;
         fout.flush();
-        if(depth >=4) break;
     }
     // Remember to flush the output to ensure the last action is written to file.  
 }

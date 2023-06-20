@@ -152,8 +152,6 @@ State* State::next_state(Move move){
   next.board[this->player][to.first][to.second] = moved;
   
   State* next_state = new State(next, 1-this->player);
-  // avl_actions.emplace(move, evaluate(*next_state));
-  
   
   if(this->game_state != WIN)
     next_state->get_legal_actions();
@@ -193,10 +191,8 @@ void State::get_legal_actions(){
   // You can redesign it
   this->game_state = NONE;
   std::vector<Move> all_actions;
-  std::vector<int> actions_points;
   auto self_board = this->board.board[this->player];
   auto oppn_board = this->board.board[1 - this->player];
-
   
   int now_piece, oppn_piece;
   for(int i=0; i<BOARD_H; i+=1){
@@ -325,9 +321,6 @@ void State::get_legal_actions(){
   }
   std::cout << "\n";
   this->legal_actions = all_actions;
-  /*for(auto it: legal_actions) {
-    avl_actions.emplace(it, State::evaluate(*this));
-  }*/
 }
 
 
