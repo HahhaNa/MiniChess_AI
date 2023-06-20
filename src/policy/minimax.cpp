@@ -33,101 +33,51 @@ bool valid_move(Move move) {
 static std::string y_axis = "654321000";
 static std::string x_axis = "ABCDEFFF";
 
-State* head = NULL;
-static Movement pre_move;
+
 bool initialize = false;
-int value;
-Movement Minimax::get_minimax(State *state, int depth, bool isPlayer){
+int bestvalue = -1e8;
+int Minimax::get_minimax(State *state, int depth, bool isPlayer){
   std::ofstream log("gamelog.txt");
-  auto actions = state->legal_actions;
-  if(!initialize) {
-    pre_move =  Movement(actions[0], -100);
+  int value;
+  state->get_legal_actions();
+
+  if(depth == 0) {
+    bestvalue  = value = -1e8;
+    for(auto it: state->legal_actions) {
+      log << "Legal0 action : " << x_axis[it.first.first] << y_axis[it.first.second] << "->" 
+                                << x_axis[it.second.first] << y_axis[it.second.second] << "\n";
+      State* next_state = state->next_state(it);
+      value = next_state->evaluate();
+      if(value > bestvalue) 
+        next_state->prev_move = state->prev_move;
+      bestvalue = std::max(bestvalue, value);
+    }
+    return bestvalue;
   }
 
-  if(!head) head = state;
-  if(!state->legal_initialize){
-    state->get_legal_actions();
-    state->legal_initialize = true;
+  if(isPlayer) { // max
+    bestvalue  = value = -1e8;
+    for(auto it: state->legal_actions) {
+      State* next_state = state->next_state(it);
+      log << "Legal action : " << x_axis[it.first.first] << y_axis[it.first.second] << "->" 
+                                << x_axis[it.second.first] << y_axis[it.second.second] << "\n";
+      value = get_minimax(next_state, depth-1, false);
+      if(value > bestvalue && depth==4) state->prev_move = next_state->prev_move; 
+      bestvalue = std::max(bestvalue, value);
+    }
+    return bestvalue;
+  } else { // min
+    bestvalue  = value = 1e8;
+    for(auto it: state->legal_actions) {
+      State* next_state = state->next_state(it);
+      value = get_minimax(next_state, depth-1, true);
+      if(value < bestvalue && depth==4) next_state->prev_move = state->prev_move;
+      bestvalue = std::max(bestvalue, value);
+    }
+    return bestvalue;
   }
-
-  Board board = state->board;
-
-  log << "MiniDepth: " << depth << std::endl;
-  log << "PreMove: " << x_axis[pre_move.move.first.first] << y_axis[pre_move.move.first.second] << " -> " 
-                      << x_axis[pre_move.move.second.first] << y_axis[pre_move.move.second.second] << "\n";
-
-  if(depth==0) {
-    if(isPlayer) { //maximize
-      value = -1e8;
-      for(auto it: state->legal_actions) {
-        if((int)(board.board[state->player][it.first.first][it.first.second]) == 0) continue;
-        if((int)(board.board[state->player][it.second.first][it.second.second]) != 0) continue;
-        if(it.first.first==it.second.first && it.first.second==it.second.second) continue;
-
-        log << "Player0 Move: " << x_axis[it.first.first] << y_axis[it.first.second] << " -> " 
-                      << x_axis[it.second.first] << y_axis[it.second.second] << "\n";
-
-
-        State* next_state = state->next_state(it);
-        if(next_state->evaluate() > value) {
-          pre_move = Movement(it, next_state->evaluate());
-          value = pre_move.score;
-        }
-      }
-    }
-
-    log << "Rtn Premove(" << depth << "): " << x_axis[pre_move.move.first.first] << y_axis[pre_move.move.first.second] << " -> " 
-                        << x_axis[pre_move.move.second.first] << y_axis[pre_move.move.second.second] << "\n";
-   
-    return pre_move;  
-  } 
-
-  else {
-    if(isPlayer) { //maximize
-      value = -1e8;
-      actions = state->legal_actions;
-      for(auto i=actions.begin(); i!=actions.end(); i++) {
-        Move it = *i;
-
-        log << "Player Move: " << x_axis[it.first.first] << y_axis[it.first.second] << " -> " 
-                        << x_axis[it.second.first] << y_axis[it.second.second] << "\n";
-
-        if((int)(board.board[state->player][it.first.first][it.first.second]) == 0) continue;
-        if((int)(board.board[state->player][it.second.first][it.second.second]) != 0) continue;
-        if(it.first.first==it.second.first && it.first.second==it.second.second) continue;
-
-        State* next_state = state->next_state(it);
-        Movement tmp =  get_minimax(next_state, depth-1, false);
-        if(tmp.score > value) {
-          pre_move = tmp;
-          log << "Pre Move: " << x_axis[it.first.first] << y_axis[it.first.second] << " -> " 
-                        << x_axis[it.second.first] << y_axis[it.second.second] << "\n";
-        }
-      }
-    } else { //minimize
-      value = 1e8;
-      actions = state->legal_actions;
-      for(auto it: state->legal_actions) {
-        if(!valid_move(it)) continue;
-
-        log << "Opponent Move: " << x_axis[it.first.first] << y_axis[it.first.second] << " -> " 
-                        << x_axis[it.second.first] << y_axis[it.second.second] << "\n";
-
-        if((int)(board.board[state->player][it.first.first][it.first.second]) == 0) continue;
-        if((int)(board.board[state->player][it.second.first][it.second.second]) != 0) continue;
-        if(it.first.first==it.second.first && it.first.second==it.second.second) continue;
-
-        State* next_state = state->next_state(it);
-        Movement tmp =  get_minimax(next_state, depth-1, true);
-        if(tmp.score < value) {
-          pre_move = tmp;
-        }
-      }
-    }
-
-    log << "Rtn Premove(" << depth << "): " << x_axis[pre_move.move.first.first] << y_axis[pre_move.move.first.second] << " -> " 
-                        << x_axis[pre_move.move.second.first] << y_axis[pre_move.move.second.second] << "\n";
-    log.close();
-    return pre_move;
-  } 
+  
+  log.close();
+  return bestvalue;
+  
 }

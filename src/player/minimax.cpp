@@ -43,15 +43,11 @@ void write_valid_spot(std::ofstream& fout) {
   while(true) {
     // Choose a minimax spot.
     Minimax minimax;
-    Movement movement;
     int depth = 0;
-    while (true){
-        movement = minimax.get_minimax(root, depth, true);
-        fout << movement.move.first.first << " " << movement.move.first.second << " "\
-          << movement.move.second.first << " " << movement.move.second.second << std::endl;
-        depth += 1;
-        if(depth>2) break;
-    }
+    int bestscore = minimax.get_minimax(root, 4, true);
+    Move move = root->prev_move;
+    fout << move.first.first << " " << move.first.second << " "\
+         << move.second.first << " " << move.second.second << std::endl;
     
     // Remember to flush the output to ensure the last action is written to file.
     fout.flush();

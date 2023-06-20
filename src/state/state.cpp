@@ -42,13 +42,21 @@ int State::evaluate(){
   std::ofstream log("gamelog.txt");
   log << "IN EVALUATE\n";
   int score = 0;
-  Board myBoard = this->board;
-  for(int i=0; i<BOARD_H; i++) {
-    for(int j=0; j<BOARD_W; j++) {
-      Chessman ply = translate(myBoard.board[player][i][j]);
-      Chessman opp = translate(myBoard.board[1-player][i][j]);
-      // log << "YY: " << ply << " " << opp << std::endl;
-      
+  for (int i = 0; i < BOARD_H; i += 1) {
+      for (int j = 0; j < BOARD_W; j += 1) {
+          int cur = this->board.board[1 - this->player][i][j];
+          if (cur) {
+              score += material_table[cur];
+          }
+          cur = this->board.board[this->player][i][j];
+          if (cur) {
+              score -= material_table[cur];
+          }
+      }
+  }
+  log << "Return Score: " << score << std::endl;
+  log.close();
+  return score;
       
       // TODO: Check below evaluate
       /*
@@ -118,13 +126,13 @@ int State::evaluate(){
           else score = -1;
         }
       }
-      */
+      
       log << "Tmp score: " << score << std::endl;
     }
   }
   log << "Return Score: " << score << std::endl;
   log.close();
-  return score;
+  return score;*/
 }
 
 
